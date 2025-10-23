@@ -8,6 +8,17 @@ import torch.nn.functional as F
 from torch.nn.utils import spectral_norm
 from typing import Optional, Tuple
 
+def _closest_factor_pair_int(n: int) -> Tuple[int, int]:
+    root = int(math.sqrt(n))
+    for delta in range(0, root + 1):
+        b = root + delta
+        if b > 0 and n % b == 0:
+            return (b, n // b)
+        b = root - delta
+        if b > 0 and n % b == 0:
+            return (b, n // b)
+    return (1, n)
+    
 class FocusedAttentionGroup(nn.Module):
     """
     Kronecker-separable focused attention.
